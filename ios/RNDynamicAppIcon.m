@@ -11,11 +11,13 @@ RCT_EXPORT_MODULE()
 
 RCT_EXPORT_METHOD(setAppIcon:(NSString *)name)
 {
-  [[UIApplication sharedApplication] setAlternateIconName:name completionHandler:^(NSError * _Nullable error) {
-    if (error != nil) {
-      RCTLog(@"%@", [error description]);
-    }
-  }];
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [[UIApplication sharedApplication] setAlternateIconName:name completionHandler:^(NSError * _Nullable error) {
+      if (error != nil) {
+        RCTLog(@"%@", [error description]);
+      }
+    }];
+  });
 }
 
 RCT_REMAP_METHOD(supportsDynamicAppIcon, resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
@@ -25,6 +27,7 @@ RCT_REMAP_METHOD(supportsDynamicAppIcon, resolver:(RCTPromiseResolveBlock)resolv
 }
 
 RCT_EXPORT_METHOD(getIconName:(RCTResponseSenderBlock) callback ){
+  dispatch_async(dispatch_get_main_queue(), ^{
     NSString *name = @"default";
     NSDictionary *results;
     
@@ -41,6 +44,7 @@ RCT_EXPORT_METHOD(getIconName:(RCTResponseSenderBlock) callback ){
                 @"iconName":name
                 };
     callback(@[results]);
+  });
 }
 
 @end
