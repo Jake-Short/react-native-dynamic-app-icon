@@ -22,8 +22,10 @@ RCT_EXPORT_METHOD(setAppIcon:(NSString *)name)
 
 RCT_REMAP_METHOD(supportsDynamicAppIcon, resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-  bool supported = [[UIApplication sharedApplication] supportsAlternateIcons];
-  resolve(@(supported));
+  dispatch_async(dispatch_get_main_queue(), ^{
+    bool supported = [[UIApplication sharedApplication] supportsAlternateIcons];
+    resolve(@(supported));
+  });
 }
 
 RCT_EXPORT_METHOD(getIconName:(RCTResponseSenderBlock) callback ){
